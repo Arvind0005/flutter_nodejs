@@ -57,7 +57,27 @@ class _HomePageState extends State<HomePage> {
                     child: Text("send request"),
                   )),
             ),
-          )
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: Container(
+                  height: 100,
+                  width: 200,
+                  child: RaisedButton(
+                    onPressed: () async {
+                      final uri = Uri.parse("${localhost()}/hello");
+                      Response response = await get(uri);
+                      setState(() {
+                        print("sending request");
+                        serverresponse = response.body.toString();
+                        print(serverresponse);
+                      });
+                    },
+                    child: Text("send hello"),
+                  )),
+            ),
+          ),
         ],
       ),
     );
