@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const port = 3000;
 const User = require('./lib/models/authdata_schema');
 const app =express();
-
+const bodyParser = require('body-parser');
 mongoose.connect(dburi,{useNewUrlParser:true,useUnifiedTopology:true}).then(function()
 {
     console.log("connexted to db");
@@ -27,6 +27,8 @@ mongoose.connect(dburi,{useNewUrlParser:true,useUnifiedTopology:true}).then(func
         }
     })
 );
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 app.get('/',function(req,res)
 {
     User.find().then(function(data)
@@ -43,6 +45,46 @@ app.get('/hello',function(req,res)
     res.send("hello how are you");
 });
 
+app.post('/create',function(req,res)
+{
+    if(req.body.name==null || req.body.password==null)
+    {
+        res.json({'success':'failed','msg':'please enter all the fields'});
+    }
+    else
+    {
+        const user = User({
+            name: req.body.name,
+            password:req.body.password,
+        })
+        user.save().then(function(result)
+        {
+            res.send(result);
+        }).catch(function(err)
+        {
+            console.log(err);
+        }) 
+    }
+    // if(!req.body.username || !req.body.password)
+    // {
+    //     res.json({'sucess':'failed','msg':"please enter all the fields"});
+    // }
+    
+      //  console.log(req.body.username);
+//    const user = User({
+//        name: 'Arvind',
+//        password:'Password',
+//    })
+//    user.save().then(function(result)
+//    {
+//        res.send(result);
+//    }).catch(function(err)
+//    {
+//        console.log(err);
+//    })
+    
+    
+})
 // app.listen(3000,hostname,function(err)
 // {
 //     if(err)
