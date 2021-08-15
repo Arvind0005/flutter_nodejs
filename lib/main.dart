@@ -74,22 +74,26 @@ class _HomePageState extends State<HomePage> {
                     width: 200,
                     child: RaisedButton(
                       onPressed: () async {
-                        print("$username,$password");
-                        final uri = Uri.parse(localhost());
-                        http.Response response = await http.get(uri);
+                        print("$username $password");
+                        var client = http.Client();
+                        final url = Uri.parse("${localhost()}/login");
+                        http.Response response = await client.post(url, body: {
+                          'name': username,
+                          'password': password,
+                        });
                         setState(() {
                           print("sending request");
                           serverresponse = response.body.toString();
                           print(serverresponse);
                         });
-                        var client = http.Client();
-                        final url = Uri.parse(localhost());
-                        http.Response responses = await http.post(url, body: {
-                          'username': username,
-                          'password': password,
-                        });
+                        // var client = http.Client();
+                        // final url = Uri.parse(localhost());
+                        // http.Response responses = await http.post(url, body: {
+                        //   'username': username,
+                        //   'password': password,
+                        // });
                       },
-                      child: Text("send get request"),
+                      child: Text("send login request"),
                     )),
               ),
             ),
@@ -125,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                     width: 200,
                     child: RaisedButton(
                       onPressed: () async {
-                        final uri = Uri.parse("${localhost()}/hello");
+                        final uri = Uri.parse("${localhost()}/");
                         http.Response response = await http.get(uri);
                         setState(() {
                           print("sending request");
@@ -133,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                           print(serverresponse);
                         });
                       },
-                      child: Text("send hello"),
+                      child: Text("get all docs"),
                     )),
               ),
             ),

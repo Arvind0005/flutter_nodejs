@@ -7,6 +7,8 @@ const port = 3000;
 const User = require('./lib/models/authdata_schema');
 const app =express();
 const bodyParser = require('body-parser');
+const { Console } = require('console');
+const { json } = require('body-parser');
 mongoose.connect(dburi,{useNewUrlParser:true,useUnifiedTopology:true}).then(function()
 {
     console.log("connexted to db");
@@ -40,6 +42,69 @@ app.get('/',function(req,res)
     })
 });
 
+app.post('/login',function(req,res)
+{
+    // if(req.body.name=null || req.body.password==null)
+    // {
+    //     console.log("check2");
+    //     res.json({'success':'failed','msg':'please specify all the data'});
+    //     res.end();
+    // }
+    User.findOne({name:req.body.name},function(err,user)
+    {
+        console.log('yyyyyyyyyyy');
+        console.log(user);
+        if(err)
+        {
+            throw err;
+        }
+        else if(user==null)
+        {
+            res.json({'sucess':'failed','msg':'user not found please try creating one'});
+            res.end();
+        }
+        else if(req.body.password != user.password)
+        {
+            res.json({'sucess':'failed','msg':'passwords did not match'});
+            res.end();
+        }
+        else if(req.body.password ==user.password)
+        {
+            res.json({'sucess':'true','msg':'user authenticated'});
+        }
+    });
+//     console.log("check1");
+//     console.log("xxxxxxxxxxxxxxxxxx");
+//    // console.log(user1);
+//     console.log(req.body.name);
+    // if(req.body.name=null || req.body.password==null)
+    // {
+    //     console.log("check2");
+    //     res.json({'success':'failed','msg':'please specify all the data'});
+    //     res.end();
+    // }
+    // if(req.body.name==User.findOne({name:req.body.name}).name,function(err)
+    // {
+    //     console.log("check3");
+    //     if(err)
+    //     {
+    //         res.json({'sucess':'failed','msg':'User not found try creating the user'});
+    //     }
+    //     else
+    //     {
+    //       const user0 = User.findOne({name:req.body.name});
+    //         if(user0.password==req.body.password)
+    //         {
+    //             res.json({'sucess':'true','msg':'user logged in'});
+    //         }
+    //         else
+    //         {
+    //             res.json({'success':'failed','msg':'password did not match'});
+    //         }
+    //     }
+    // });
+})
+
 app.get('/hello',function(req,res)
 {
     res.send("hello how are you");
@@ -59,7 +124,7 @@ app.post('/create',function(req,res)
         })
         user.save().then(function(result)
         {
-            res.send(result);
+            res.send(result);``
         }).catch(function(err)
         {
             console.log(err);
