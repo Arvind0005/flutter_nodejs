@@ -76,7 +76,8 @@ class _HomePageState extends State<HomePage> {
                       onPressed: () async {
                         print("$username $password");
                         var client = http.Client();
-                        final url = Uri.parse("${localhost()}/login");
+                        final url = Uri.parse(
+                            "http://localhost:3000/login"); //call localhost() function for mobile
                         http.Response response = await client.post(url, body: {
                           'name': username,
                           'password': password,
@@ -106,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                     child: RaisedButton(
                       onPressed: () async {
                         var client = http.Client();
-                        final url = Uri.parse("${localhost()}/create");
+                        final url = Uri.parse("http://localhost:3000/create");
                         http.Response response = await client.post(url, body: {
                           'name': username,
                           'password': password,
@@ -129,8 +130,11 @@ class _HomePageState extends State<HomePage> {
                     width: 200,
                     child: RaisedButton(
                       onPressed: () async {
-                        final uri = Uri.parse("${localhost()}/");
+                        print("zzzzzzzzzzzzzzzz");
+                        final uri = Uri.parse("http://localhost:3000/");
                         http.Response response = await http.get(uri);
+                        print(response.body.toString());
+                        print("xxxxxxxxxxxxxxxxxx");
                         setState(() {
                           print("sending request");
                           serverresponse = response.body.toString();
@@ -151,7 +155,9 @@ class _HomePageState extends State<HomePage> {
 localhost() {
   if (Platform.isAndroid) {
     return 'http://10.0.2.2:3000';
-  } else {
+  } else if (Platform.isIOS) {
     return "http://localhost:3000";
+  } else {
+    return "http://127.0.0.1:3000";
   }
 }

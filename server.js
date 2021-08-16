@@ -5,10 +5,12 @@ const dburi = 'mongodb+srv://Arvind:password05@cluster0.rayzm.mongodb.net/myFirs
 const mongoose = require('mongoose');
 const port = 3000;
 const User = require('./lib/models/authdata_schema');
+const cors = require('cors');
 const app =express();
 const bodyParser = require('body-parser');
 const { Console } = require('console');
 const { json } = require('body-parser');
+app.use(cors());
 mongoose.connect(dburi,{useNewUrlParser:true,useUnifiedTopology:true}).then(function()
 {
     console.log("connexted to db");
@@ -33,6 +35,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.get('/',function(req,res)
 {
+    console.log("yessss");
     User.find().then(function(data)
     {
         res.send(data);
